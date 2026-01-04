@@ -26,6 +26,7 @@ import UsuarioGenericoRouter from "./api/usuarios-genericos";
 import VacacionesInterescolaresRouter from "./api/vacaciones-interescolares";
 import EventosRouter from "./api/eventos";
 import MiHorarioRouter from "./api/mi-horario";
+import ReportesAsistenciaEscolarRouter from "./api/reportes-asistencia-escolar";
 
 const router = Router();
 
@@ -98,14 +99,35 @@ router.use("/usuarios-genericos", decodedRol as any, UsuarioGenericoRouter);
 
 router.use("/eventos", decodedRol as any, EventosRouter);
 
-router.use("/mi-horario", decodedRol as any, MiHorarioRouter);
-
-
+router.use(
+  "/mi-horario",
+  isDirectivoAuthenticated,
+  isAuxiliarAuthenticated,
+  isProfesorPrimariaAuthenticated,
+  isProfesorSecundariaAuthenticated,
+  isTutorAuthenticated,
+  isPersonalAdministrativoAuthenticated as any,
+  // isResponsableAuthenticated,
+  checkAuthentication as any,
+  decodedRol as any,
+  MiHorarioRouter
+);
 
 router.use(
   "/vacaciones-interescolares",
   decodedRol as any,
   VacacionesInterescolaresRouter
+);
+
+router.use(
+  "/reportes-asistencia-escolar",
+  decodedRol as any,
+  isDirectivoAuthenticated,
+  isProfesorPrimariaAuthenticated,
+  isProfesorSecundariaAuthenticated,
+  isTutorAuthenticated,
+  isAuxiliarAuthenticated,
+  ReportesAsistenciaEscolarRouter
 );
 
 export default router;
